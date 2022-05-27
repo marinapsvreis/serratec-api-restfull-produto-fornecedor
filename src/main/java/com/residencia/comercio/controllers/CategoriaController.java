@@ -31,17 +31,17 @@ public class CategoriaController {
 		return new ResponseEntity<>(categoriaList, HttpStatus.OK);
 	}
 
-	@GetMapping("/dto/{id}")
-	public ResponseEntity<CategoriaDTO> findCategoriaDTOById(@PathVariable Integer id) {
-		CategoriaDTO categoriaDTO = categoriaService.findCategoriaDTOById(id);
+	@GetMapping("/dto/{idCategoria}")
+	public ResponseEntity<CategoriaDTO> findCategoriaDTOById(@PathVariable Integer idCategoria) {
+		CategoriaDTO categoriaDTO = categoriaService.findCategoriaDTOById(idCategoria);
 		return new ResponseEntity<>(categoriaDTO, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Categoria> findCategoriaById(@PathVariable Integer id) {
-		Categoria categoria = categoriaService.findCategoriaById(id);
+	@GetMapping("/{idCategoria}")
+	public ResponseEntity<Categoria> findCategoriaById(@PathVariable Integer idCategoria) {
+		Categoria categoria = categoriaService.findCategoriaById(idCategoria);
 		if(null == categoria)
-			throw new NoSuchElementFoundException("Não foi encontrado Categoria com o id " + id);
+			throw new NoSuchElementFoundException("Não foi encontrado Categoria com o id " + idCategoria);
 		else
 			return new ResponseEntity<>(categoria, HttpStatus.OK);
 	}
@@ -64,12 +64,12 @@ public class CategoriaController {
 		return new ResponseEntity<>(novoCategoria, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteCategoria(@PathVariable Integer id) {
-		if(null == categoriaService.findCategoriaById(id))
+	@DeleteMapping("/{idCategoria}")
+	public ResponseEntity<String> deleteCategoria(@PathVariable Integer idCategoria) {
+		if(null == categoriaService.findCategoriaById(idCategoria))
 			return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
 		
-		categoriaService.deleteCategoria(id);
+		categoriaService.deleteCategoria(idCategoria);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.residencia.comercio.dtos.CadastroEmpresaReceitaDTO;
 import com.residencia.comercio.dtos.FornecedorDTO;
 import com.residencia.comercio.entities.Fornecedor;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
@@ -31,18 +32,28 @@ public class FornecedorController {
 		List<Fornecedor> fornecedorList = fornecedorService.findAllFornecedor();
 		return new ResponseEntity<>(fornecedorList, HttpStatus.OK);
 	}
+	
+	@GetMapping("/cnpj/{cnpj}")
+	public ResponseEntity<CadastroEmpresaReceitaDTO> consultaDaCadastroEmpresaReceitaDTO(String cnpj) {
+		CadastroEmpresaReceitaDTO cadEmpresaDTO = fornecedorService.consultarDadosPorCnpj(cnpj);
+		if(cadEmpresaDTO == null) {
+			throw new NoSuchElementFoundException("Não foram encontrados dados para o CNPJ informado!");
+		}else {
+			return new ResponseEntity<>(cadEmpresaDTO, HttpStatus.OK);
+		}
+	}
 
-	@GetMapping("/dto/{id}")
-	public ResponseEntity<FornecedorDTO> findFornecedorDTOById(@PathVariable Integer id) {
-		FornecedorDTO fornecedorDTO = fornecedorService.findFornecedorDTOById(id);
+	@GetMapping("/dto/{idFornecedor}")
+	public ResponseEntity<FornecedorDTO> findFornecedorDTOById(@PathVariable Integer idFornecedor) {
+		FornecedorDTO fornecedorDTO = fornecedorService.findFornecedorDTOById(idFornecedor);
 		return new ResponseEntity<>(fornecedorDTO, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Fornecedor> findFornecedorById(@PathVariable Integer id) {
-		Fornecedor fornecedor = fornecedorService.findFornecedorById(id);
+	@GetMapping("/{idFornecedor}")
+	public ResponseEntity<Fornecedor> findFornecedorById(@PathVariable Integer idFornecedor) {
+		Fornecedor fornecedor = fornecedorService.findFornecedorById(idFornecedor);
 		if(null == fornecedor)
-			throw new NoSuchElementFoundException("Não foi encontrado Fornecedor com o id " + id);
+			throw new NoSuchElementFoundException("Não foi encontrado Fornecedor com o id " + idFornecedor);
 		else
 			return new ResponseEntity<>(fornecedor, HttpStatus.OK);
 	}
@@ -72,12 +83,12 @@ public class FornecedorController {
 		return new ResponseEntity<>(novoFornecedor, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteFornecedor(@PathVariable Integer id) {
-		if(null == fornecedorService.findFornecedorById(id))
+	@DeleteMapping("/{idFornecedor}")
+	public ResponseEntity<String> deleteFornecedor(@PathVariable Integer idFornecedor) {
+		if(null == fornecedorService.findFornecedorById(idFornecedor))
 			return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
 		
-		fornecedorService.deleteFornecedor(id);
+		fornecedorService.deleteFornecedor(idFornecedor);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 

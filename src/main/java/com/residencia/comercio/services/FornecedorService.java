@@ -1,10 +1,14 @@
 package com.residencia.comercio.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.residencia.comercio.dtos.CadastroEmpresaReceitaDTO;
 import com.residencia.comercio.dtos.FornecedorDTO;
 import com.residencia.comercio.entities.Fornecedor;
 import com.residencia.comercio.repositories.FornecedorRepository;
@@ -72,5 +76,18 @@ public class FornecedorService {
 		FornecedorDTO fornecedorDTO = new FornecedorDTO();
 		fornecedorDTO.setIdFornecedor(fornecedor.getIdFornecedor());
 		return fornecedorDTO;
+	}
+	
+	public CadastroEmpresaReceitaDTO consultarDadosPorCnpj(String cnpj) {
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = "https://www.receitaws.com.br/v1/cnpj/{cnpj}";
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("cnpj", cnpj);
+
+		CadastroEmpresaReceitaDTO cadastroEmpresaReceitaDTO = 
+				restTemplate.getForObject(uri, CadastroEmpresaReceitaDTO.class, params);
+
+		return cadastroEmpresaReceitaDTO;
 	}
 }
