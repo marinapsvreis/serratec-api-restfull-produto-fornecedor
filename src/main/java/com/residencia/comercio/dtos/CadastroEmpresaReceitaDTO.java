@@ -4,19 +4,13 @@ public class CadastroEmpresaReceitaDTO {
 	private String situacao;
 	private String tipo;
 	private String nome;
-	private String porte;
 	private String abertura;
-	private String data_situacao;
-	private String motivo_situacao;
 	private String telefone;
 	private String email;
-	private String natureza_juridica;
 	private String cnpj;
-	private String ultima_atualizacao;
-	private String status;
 	private String fantasia;
 	private String logradouro;
-	private String numero;
+	private Integer numero;
 	private String complemento;
 	private String cep;
 	private String bairro;
@@ -47,36 +41,12 @@ public class CadastroEmpresaReceitaDTO {
 		this.nome = nome;
 	}
 
-	public String getPorte() {
-		return porte;
-	}
-
-	public void setPorte(String porte) {
-		this.porte = porte;
-	}
-
 	public String getAbertura() {
 		return abertura;
 	}
 
 	public void setAbertura(String abertura) {
 		this.abertura = abertura;
-	}
-
-	public String getData_situacao() {
-		return data_situacao;
-	}
-
-	public void setData_situacao(String data_situacao) {
-		this.data_situacao = data_situacao;
-	}
-
-	public String getMotivo_situacao() {
-		return motivo_situacao;
-	}
-
-	public void setMotivo_situacao(String motivo_situacao) {
-		this.motivo_situacao = motivo_situacao;
 	}
 
 	public String getTelefone() {
@@ -95,36 +65,12 @@ public class CadastroEmpresaReceitaDTO {
 		this.email = email;
 	}
 
-	public String getNatureza_juridica() {
-		return natureza_juridica;
-	}
-
-	public void setNatureza_juridica(String natureza_juridica) {
-		this.natureza_juridica = natureza_juridica;
-	}
-
 	public String getCnpj() {
 		return cnpj;
 	}
 
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
-	}
-
-	public String getUltima_atualizacao() {
-		return ultima_atualizacao;
-	}
-
-	public void setUltima_atualizacao(String ultima_atualizacao) {
-		this.ultima_atualizacao = ultima_atualizacao;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getFantasia() {
@@ -143,11 +89,11 @@ public class CadastroEmpresaReceitaDTO {
 		this.logradouro = logradouro;
 	}
 
-	public String getNumero() {
+	public Integer getNumero() {
 		return numero;
 	}
 
-	public void setNumero(String numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 
@@ -193,12 +139,10 @@ public class CadastroEmpresaReceitaDTO {
 
 	@Override
 	public String toString() {
-		return "CadastroEmpresaReceitaDTO [situacao=" + situacao + ", tipo=" + tipo + ", nome=" + nome + ", porte="
-				+ porte + ", abertura=" + abertura + ", data_situacao=" + data_situacao + ", motivo_situacao="
-				+ motivo_situacao + ", telefone=" + telefone + ", email=" + email + ", natureza_juridica="
-				+ natureza_juridica + ", cnpj=" + cnpj + ", ultima_atualizacao=" + ultima_atualizacao + ", status="
-				+ status + ", fantasia=" + fantasia + ", logradouro=" + logradouro + ", numero=" + numero
-				+ ", complemento=" + complemento + ", cep=" + cep + ", bairro=" + bairro + ", municipio=" + municipio
-				+ ", uf=" + uf + "]";
+		return "CadastroEmpresaReceitaDTO [situacao=" + situacao + ", tipo=" + tipo + ", nome=" + nome + ", abertura="
+				+ abertura + ", telefone=" + telefone + ", email=" + email + ", cnpj=" + cnpj + ", fantasia=" + fantasia
+				+ ", logradouro=" + logradouro + ", numero=" + numero + ", complemento=" + complemento + ", cep=" + cep
+				+ ", bairro=" + bairro + ", municipio=" + municipio + ", uf=" + uf + "]";
 	}
+
 }

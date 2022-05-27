@@ -59,11 +59,11 @@ public class FornecedorController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Fornecedor> saveFornecedor(@RequestParam String cnpj) {
-		Fornecedor fornecedor = new Fornecedor();
-		Fornecedor novoFornecedor = fornecedorService.saveFornecedor(fornecedor);
-		return new ResponseEntity<>(novoFornecedor, HttpStatus.CREATED);
-	}
+    public ResponseEntity<Fornecedor> saveFornecedor(@RequestParam String cnpj) {
+        return new ResponseEntity<>(fornecedorService.saveFornecedor(fornecedorService
+        		.converterAPIExternaToEntidade(fornecedorService
+        		.consultarDadosPorCnpj(cnpj))), HttpStatus.CREATED);
+    }
 
 	@PostMapping("/completo")
 	public ResponseEntity<Fornecedor> saveFornecedorCompleto(@RequestBody Fornecedor fornecedor) {
@@ -81,6 +81,14 @@ public class FornecedorController {
 	public ResponseEntity<Fornecedor> updateFornecedor(@RequestBody Fornecedor fornecedor) {
 		Fornecedor novoFornecedor = fornecedorService.updateFornecedor(fornecedor);
 		return new ResponseEntity<>(novoFornecedor, HttpStatus.OK);
+	}
+	
+	@PutMapping("/{idFornecedor}")
+	public ResponseEntity<Fornecedor> updateAddressFornecedor(@PathVariable Integer idFornecedor, @RequestParam String cep) {
+		return new ResponseEntity<>(fornecedorService.updateFornecedor
+				(fornecedorService.atualizarEnderecoFornecedor
+				(fornecedorService.findFornecedorById(idFornecedor),fornecedorService.receberEnderecoViaCEPAPI(cep))),
+				HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{idFornecedor}")

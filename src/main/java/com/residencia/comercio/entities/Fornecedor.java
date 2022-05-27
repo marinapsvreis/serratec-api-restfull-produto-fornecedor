@@ -27,7 +27,7 @@ public class Fornecedor {
 	@Column(name = "cnpj")
 	// @NotEmpty(message = "O número do CNPJ não pode ficar em branco.")
 	// @Digits(message="O CNPJ deve conter 14 números.", fraction = 0, integer = 14)
-	private Integer cnpj;
+	private String cnpj;
 
 	@Column(name = "tipo")
 	private String tipo;
@@ -83,11 +83,11 @@ public class Fornecedor {
 		this.idFornecedor = idFornecedor;
 	}
 
-	public Integer getCnpj() {
+	public String getCnpj() {
 		return cnpj;
 	}
 
-	public void setCnpj(Integer cnpj) {
+	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
 
