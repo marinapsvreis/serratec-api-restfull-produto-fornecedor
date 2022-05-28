@@ -2,9 +2,13 @@ package com.residencia.comercio.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +25,17 @@ import com.residencia.comercio.entities.Fornecedor;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
 import com.residencia.comercio.services.FornecedorService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/fornecedor")
+@Validated
 public class FornecedorController {
 	@Autowired
 	FornecedorService fornecedorService;
 
 	@GetMapping
+	@Operation(summary = "Listar todos os fornecedores")
 	public ResponseEntity<List<Fornecedor>> findAllFornecedor() {
 		List<Fornecedor> fornecedorList = fornecedorService.findAllFornecedor();
 		return new ResponseEntity<>(fornecedorList, HttpStatus.OK);
@@ -59,32 +67,32 @@ public class FornecedorController {
 	}
 	
 	@PostMapping
-    public ResponseEntity<Fornecedor> saveFornecedor(@RequestParam String cnpj) {
+    public ResponseEntity<Fornecedor> saveFornecedor(@RequestParam @Digits(message="O CNPJ deve conter 14 números.", fraction = 0, integer = 14) String cnpj) {
         return new ResponseEntity<>(fornecedorService.saveFornecedor(fornecedorService
         		.converterAPIExternaToEntidade(fornecedorService
         		.consultarDadosPorCnpj(cnpj))), HttpStatus.CREATED);
     }
 
 	@PostMapping("/completo")
-	public ResponseEntity<Fornecedor> saveFornecedorCompleto(@RequestBody Fornecedor fornecedor) {
+	public ResponseEntity<Fornecedor> saveFornecedorCompleto(@Valid @RequestBody Fornecedor fornecedor) {
 		Fornecedor novoFornecedor = fornecedorService.saveFornecedor(fornecedor);
 		return new ResponseEntity<>(novoFornecedor, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/dto")
-	public ResponseEntity<FornecedorDTO> saveFornecedorDTO(@RequestBody FornecedorDTO fornecedorDTO) {
+	public ResponseEntity<FornecedorDTO> saveFornecedorDTO(@Valid @RequestBody FornecedorDTO fornecedorDTO) {
 		FornecedorDTO novoFornecedorDTO = fornecedorService.saveFornecedorDTO(fornecedorDTO);
 		return new ResponseEntity<>(novoFornecedorDTO, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<Fornecedor> updateFornecedor(@RequestBody Fornecedor fornecedor) {
+	public ResponseEntity<Fornecedor> updateFornecedor(@Valid @RequestBody Fornecedor fornecedor) {
 		Fornecedor novoFornecedor = fornecedorService.updateFornecedor(fornecedor);
 		return new ResponseEntity<>(novoFornecedor, HttpStatus.OK);
 	}
 	
 	@PutMapping("/{idFornecedor}")
-	public ResponseEntity<Fornecedor> updateAddressFornecedor(@PathVariable Integer idFornecedor, @RequestParam String cep) {
+	public ResponseEntity<Fornecedor> updateAddressFornecedor(@Valid @PathVariable Integer idFornecedor, @RequestParam String cep) {
 		return new ResponseEntity<>(fornecedorService.updateFornecedor
 				(fornecedorService.atualizarEnderecoFornecedor
 				(fornecedorService.findFornecedorById(idFornecedor),fornecedorService.receberEnderecoViaCEPAPI(cep))),

@@ -2,6 +2,8 @@ package com.residencia.comercio.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,13 +52,13 @@ public class CategoriaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Categoria> saveCategoria(@RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> saveCategoria(@Valid @RequestBody Categoria categoria) {
 		Categoria novoCategoria = categoriaService.saveCategoria(categoria);
 		return new ResponseEntity<>(novoCategoria, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/dto")
-	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@RequestBody CategoriaDTO categoriaDTO) {
+	public ResponseEntity<CategoriaDTO> saveCategoriaDTO(@Valid @RequestBody CategoriaDTO categoriaDTO) {
 		CategoriaDTO novoCategoriaDTO = categoriaService.saveCategoriaDTO(categoriaDTO);
 		return new ResponseEntity<>(novoCategoriaDTO, HttpStatus.CREATED);
 	}
@@ -70,7 +72,7 @@ public class CategoriaController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Categoria> updateCategoria(@RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> updateCategoria(@Valid @RequestBody Categoria categoria) {
 		Categoria novoCategoria = categoriaService.updateCategoria(categoria);
 		return new ResponseEntity<>(novoCategoria, HttpStatus.OK);
 	}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
+import com.residencia.comercio.exceptions.NotNullException;
 import com.residencia.comercio.services.ProdutoService;
 
 @RestController
@@ -60,17 +61,25 @@ public class ProdutoController {
 	
 	@PostMapping
 	public ResponseEntity<Produto> saveProduto(@Valid @RequestBody Produto produto){
+		if(produto.getFornecedor().getIdFornecedor() == null) {
+			throw new NotNullException("Id do Fornecedor não pode ser nulo");
+		}
+		
+		if(produto.getCategoria().getIdCategoria() == null) {
+			throw new NotNullException("Id da Categoria não pode ser nulo");
+		}
+		
 		return new ResponseEntity<>(produtoService.saveProduto(produto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<String> updateProduto(@RequestBody Produto produto){
+	public ResponseEntity<String> updateProduto(@Valid @RequestBody Produto produto){
 		produtoService.updateProduto(produto);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 	
 	@PutMapping("/{idProduto}")
-	public ResponseEntity<Produto> updateProduto(@PathVariable Integer idProduto, @RequestBody Produto produto){
+	public ResponseEntity<Produto> updateProduto(@PathVariable Integer idProduto, @Valid @RequestBody Produto produto){
 		Produto produtoAtualizado = produtoService.updateProdutoComId(produto, idProduto);
 		if(produto == null) {
 			return new ResponseEntity<>(produtoAtualizado, HttpStatus.BAD_REQUEST);

@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -32,10 +33,12 @@ public class Produto {
 	@NotEmpty(message = "O nome do produto não pode ficar em branco.")
 	private String nomeProduto;
  
+	@NotNull(message = "Escolha um fornecedor para esse produto")
 	@ManyToOne
-	@JoinColumn(name = "id_fornecedor", referencedColumnName = "id_fornecedor")
+	@JoinColumn(name = "id_fornecedor", referencedColumnName = "id_fornecedor")	
 	private Fornecedor fornecedor;
  
+	@NotNull(message = "Escolha uma categoria para esse produto")
 	@ManyToOne
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
 	private Categoria categoria;
