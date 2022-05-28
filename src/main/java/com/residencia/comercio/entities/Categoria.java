@@ -28,6 +28,9 @@ public class Categoria {
 	@NotEmpty(message = "O nome da categoria não pode ficar em branco.")
 	private String nomeCategoria;
 
+	@Column(name = "imagem")
+	private String nomeImagem;
+
 	@OneToMany(mappedBy = "categoria")
 	@JsonIgnore
 	private List<Produto> produtoList;
@@ -46,6 +49,14 @@ public class Categoria {
 
 	public void setNomeCategoria(String nomeCategoria) {
 		this.nomeCategoria = nomeCategoria;
+	}
+
+	public String getNomeImagem() {
+		return nomeImagem;
+	}
+
+	public void setNomeImagem(String nomeImagem) {
+		this.nomeImagem = nomeImagem;
 	}
 
 	public List<Produto> getProdutoList() {

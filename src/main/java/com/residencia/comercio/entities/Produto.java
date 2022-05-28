@@ -8,8 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
- 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  
@@ -23,6 +24,7 @@ public class Produto {
 	@Column(name = "id_produto")
 	private Integer idProduto;
  
+	@NotBlank(message = "O sku do produto não pode estar vazio")
 	@Column(name= "sku")
 	private String sku;
  

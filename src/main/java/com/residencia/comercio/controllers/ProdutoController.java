@@ -2,6 +2,8 @@ package com.residencia.comercio.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.residencia.comercio.entities.Produto;
@@ -45,8 +48,18 @@ public class ProdutoController {
 		}
 	}
 	
+	@GetMapping("/id")
+	public ResponseEntity<Produto> findProdutoById2(@RequestParam Integer idProduto){
+		Produto produto = produtoService.findProdutoById(idProduto);
+		if(produto == null) {
+			throw new NoSuchElementFoundException("Não foi encontrado Produto com o id: " + idProduto);
+		}else {
+			return new ResponseEntity<>(produto, HttpStatus.OK);
+		}
+	}
+	
 	@PostMapping
-	public ResponseEntity<Produto> saveProduto(@RequestBody Produto produto){
+	public ResponseEntity<Produto> saveProduto(@Valid @RequestBody Produto produto){
 		return new ResponseEntity<>(produtoService.saveProduto(produto), HttpStatus.CREATED);
 	}
 	

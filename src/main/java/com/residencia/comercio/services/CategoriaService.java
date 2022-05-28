@@ -1,10 +1,13 @@
 package com.residencia.comercio.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.residencia.comercio.dtos.CategoriaDTO;
 import com.residencia.comercio.entities.Categoria;
 import com.residencia.comercio.repositories.CategoriaRepository;
@@ -36,6 +39,26 @@ public class CategoriaService {
 	
 	public Categoria saveCategoria(Categoria categoria) {
 		return categoriaRepository.save(categoria);
+	}
+	
+	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file) {
+		
+		Categoria categoriaConvertida = new Categoria();
+		
+		try {
+			ObjectMapper objMapper = new ObjectMapper();
+			categoriaConvertida = objMapper.readValue(categoriaString, Categoria.class);
+		}catch(IOException e) {
+			System.out.println("Ocorreu um erro na conversão");
+		}
+		
+		Categoria categoriaBD = categoriaRepository.save(categoriaConvertida);
+		
+		categoriaBD.setNomeImagem(categoriaBD.getIdCategoria()+"_"+file.getOriginalFilename());
+		
+		Categoria categoriaAtualizada = categoriaRepository.save(categoriaBD);
+		
+		return categoriaAtualizada;
 	}
 	
 	public CategoriaDTO saveCategoriaDTO(CategoriaDTO categoriaDTO) {
