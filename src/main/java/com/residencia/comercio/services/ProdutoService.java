@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.residencia.comercio.dtos.ProdutoDTO;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.repositories.CategoriaRepository;
 import com.residencia.comercio.repositories.FornecedorRepository;
@@ -32,33 +33,55 @@ public class ProdutoService {
 				: null;
 	}
 	
+	public ProdutoDTO findProdutoDTOById(Integer id) {
+        return produtoRepository.findById(id).isPresent() ? produtoToDTO(produtoRepository.findById(id).get()) : null;
+    }
+	
 	public Produto saveProduto(Produto produto) {
 		return produtoRepository.save(produto);
 	}
+	
+	public Produto saveProdutoDTO(ProdutoDTO produtoDTO) {
+        return produtoRepository.save(produtoDTOtoEntity(produtoDTO));
+    }
 	
 	public Produto updateProduto(Produto produto) {
 		return produtoRepository.save(produto);
 	}
 	
-	public Produto updateProdutoComId(Produto produto, Integer idProduto) {
-		Produto produtoBD = produtoRepository.findById(idProduto).isPresent()
-				? produtoRepository.findById(idProduto).get()
-				: null;
-		
-		Produto produtoAtualizado = null;
-		if(null != produtoBD) {
-			produtoBD.setNomeProduto(produto.getNomeProduto());
-			produtoBD.setSku(produto.getSku());
-			produtoBD.setFornecedor(produto.getFornecedor());
-			produtoBD.setCategoria(produto.getCategoria());
-
-			produtoAtualizado = produtoRepository.save(produtoBD);
-		}
-		return produtoAtualizado;
-	}
-	
 	public void deleteProduto(Integer idProduto) {		
 		produtoRepository.deleteById(idProduto);
-	}	
+	}
+	
+	 private Produto produtoDTOtoEntity(ProdutoDTO produtoDTO) {
+	        Produto produto = new Produto();
+	        
+	        if (produtoDTO.getCategoriaId() != null) {
+	            produto.setCategoria(categoriaRepository.findById(produtoDTO.getCategoriaId()).get());
+	        }
+	        if (produtoDTO.getFornecedorId() != null) {
+	            produto.setFornecedor(fornecedorRepository.findById(produtoDTO.getFornecedorId()).get());
+	        }
+	        
+	        produto.setIdProduto(produtoDTO.getIdProduto());
+	        produto.setNomeProduto(produtoDTO.getNomeProduto());
+	        produto.setSku(produtoDTO.getSku());
+
+	        return produto;
+	    }
+
+	    private ProdutoDTO produtoToDTO(Produto produto) {
+	        ProdutoDTO produtoDTO = new ProdutoDTO();
+	        
+	        produtoDTO.setCategoriaId(produto.getCategoria().getIdCategoria());
+	        produtoDTO.setCategoriaNome(produto.getCategoria().getNomeCategoria());
+	        produtoDTO.setFornecedorId(produto.getFornecedor().getIdFornecedor());
+	        produtoDTO.setFornecedorNome(produto.getFornecedor().getNomeFantasia());
+	        produtoDTO.setIdProduto(produto.getIdProduto());
+	        produtoDTO.setNomeProduto(produto.getNomeProduto());
+	        produtoDTO.setSku(produto.getSku());
+	        
+	        return produtoDTO;
+	    }
 	
 }

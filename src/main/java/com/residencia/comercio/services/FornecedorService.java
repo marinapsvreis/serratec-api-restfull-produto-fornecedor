@@ -4,8 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import com.residencia.comercio.dtos.CadastroEmpresaReceitaDTO;
 import com.residencia.comercio.dtos.ConsultaCEPDTO;
 import com.residencia.comercio.dtos.FornecedorDTO;
 import com.residencia.comercio.entities.Fornecedor;
+import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.repositories.FornecedorRepository;
 
 @Service
@@ -144,5 +148,15 @@ public class FornecedorService {
 
 		return fornecedor;
 	}
+	
+	public boolean CNPJValid(String cnpj) {
+        if (cnpj.charAt(2) != '.' || cnpj.charAt(6) != '.' || cnpj.charAt(10) != '/' || cnpj.charAt(15) != '-' || cnpj.length() != 18) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
 
 }

@@ -1,9 +1,13 @@
 package com.residencia.comercio.services;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +20,9 @@ import com.residencia.comercio.repositories.CategoriaRepository;
 public class CategoriaService {
 	@Autowired
 	CategoriaRepository categoriaRepository;
+	
+	@Value("${pasta.arquivos.imagem}")
+    private Path path;
 	
 	public List<Categoria> findAllCategoria(){
 		return categoriaRepository.findAll();
@@ -43,22 +50,32 @@ public class CategoriaService {
 	
 	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file) {
 		
-		Categoria categoriaConvertida = new Categoria();
+		Categoria novaCategoria = new Categoria();
 		
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
-			categoriaConvertida = objMapper.readValue(categoriaString, Categoria.class);
+			novaCategoria = objMapper.readValue(categoriaString, Categoria.class);
 		}catch(IOException e) {
 			System.out.println("Ocorreu um erro na conversão");
 		}
 		
-		Categoria categoriaBD = categoriaRepository.save(categoriaConvertida);
+		Categoria categoriaSalva = categoriaRepository.save(novaCategoria);
 		
-		categoriaBD.setNomeImagem(categoriaBD.getIdCategoria()+"_"+file.getOriginalFilename());
+		String fileName = "categoria." + categoriaSalva.getIdCategoria() + ".image.png";
 		
-		Categoria categoriaAtualizada = categoriaRepository.save(categoriaBD);
+		try {
+			Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 		
-		return categoriaAtualizada;
+		try {
+			categoriaSalva.setNomeImagem(path.resolve(fileName).toRealPath().toString());
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+
+		return categoriaRepository.save(categoriaSalva);
 	}
 	
 	public CategoriaDTO saveCategoriaDTO(CategoriaDTO categoriaDTO) {

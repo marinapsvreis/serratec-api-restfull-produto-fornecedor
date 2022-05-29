@@ -10,10 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,7 +29,6 @@ public class Fornecedor {
 
 	@Column(name = "cnpj")
 	@NotEmpty(message = "O número do CNPJ não pode ficar em branco.")
-	@Digits(message="O CNPJ deve conter 14 números.", fraction = 0, integer = 14)
 	private String cnpj;
 
 	@Column(name = "tipo")
@@ -46,6 +44,7 @@ public class Fornecedor {
 	private String telefone;
 
 	@Column(name = "email")
+	@Pattern(regexp = "^.+@.+\\..+$", message = "Email invalido")
 	private String email;
 
 	@Column(name = "nome_fantasia")

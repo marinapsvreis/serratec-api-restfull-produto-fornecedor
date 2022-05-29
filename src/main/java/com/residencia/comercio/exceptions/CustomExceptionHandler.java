@@ -53,4 +53,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       ErrorResponse error = new ErrorResponse(httpStatus.value(), "Campo não pode ser nulo", details);
       return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(CNPJException.class)
+    public final ResponseEntity<Object> handleNotNullException(CNPJException ex, WebRequest request) {
+      List<String> details = new ArrayList<>();
+      details.add(ex.getLocalizedMessage());
+      HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+      ErrorResponse error = new ErrorResponse(httpStatus.value(), "CNPJ no formato errado", details);
+      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

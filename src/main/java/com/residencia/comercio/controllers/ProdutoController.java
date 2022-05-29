@@ -17,19 +17,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.residencia.comercio.dtos.ProdutoDTO;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
 import com.residencia.comercio.exceptions.NotNullException;
 import com.residencia.comercio.services.ProdutoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/produto")
+@Tag(name = "Produto", description = "endpoints")
 public class ProdutoController {
 
 	@Autowired
 	private ProdutoService produtoService;
 
 	@GetMapping
+	@Operation(summary = "Listar todos os produtos")
 	public ResponseEntity<List<Produto>> findAllProduto(){
 		List<Produto> produtoList = produtoService.findAllProduto();
 		if(produtoList.isEmpty()) {
@@ -40,6 +46,7 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/{idProduto}")
+	@Operation(summary = "Listar produto via ID Path")
 	public ResponseEntity<Produto> findProdutoById(@PathVariable Integer idProduto){
 		Produto produto = produtoService.findProdutoById(idProduto);
 		if(produto == null) {
@@ -50,6 +57,7 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/id")
+	@Operation(summary = "Listar produto via ID Request Params")
 	public ResponseEntity<Produto> findProdutoById2(@RequestParam Integer idProduto){
 		Produto produto = produtoService.findProdutoById(idProduto);
 		if(produto == null) {
@@ -59,7 +67,14 @@ public class ProdutoController {
 		}
 	}
 	
+	@GetMapping("/dto/{id}")
+	@Operation(summary = "Listar produto via ID pelo DTO")
+    public ResponseEntity<ProdutoDTO> findProdutoDTOById(@PathVariable Integer id) {
+        return new ResponseEntity<>(produtoService.findProdutoDTOById(id), HttpStatus.OK);
+    }
+	
 	@PostMapping
+	@Operation(summary = "Cadastrar produto")
 	public ResponseEntity<Produto> saveProduto(@Valid @RequestBody Produto produto){
 		if(produto.getFornecedor().getIdFornecedor() == null) {
 			throw new NotNullException("Id do Fornecedor não pode ser nulo");
@@ -72,23 +87,22 @@ public class ProdutoController {
 		return new ResponseEntity<>(produtoService.saveProduto(produto), HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/dto")
+	@Operation(summary = "Cadastrar produto via DTO")
+    public ResponseEntity<ProdutoDTO> saveProdutoDTO(@Valid @RequestBody ProdutoDTO produtoDTO) {
+        produtoService.saveProdutoDTO(produtoDTO);
+        return new ResponseEntity<>(produtoDTO, HttpStatus.CREATED);
+    }
+	
 	@PutMapping
+	@Operation(summary = "Atualizar produto passando todos os dados.")
 	public ResponseEntity<String> updateProduto(@Valid @RequestBody Produto produto){
 		produtoService.updateProduto(produto);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 	
-	@PutMapping("/{idProduto}")
-	public ResponseEntity<Produto> updateProduto(@PathVariable Integer idProduto, @Valid @RequestBody Produto produto){
-		Produto produtoAtualizado = produtoService.updateProdutoComId(produto, idProduto);
-		if(produto == null) {
-			return new ResponseEntity<>(produtoAtualizado, HttpStatus.BAD_REQUEST);
-		}else {
-			return new ResponseEntity<>(produtoAtualizado, HttpStatus.OK);
-		}
-	}
-	
 	@DeleteMapping("/{idProduto}")
+	@Operation(summary = "Deletar produto via ID")
 	public ResponseEntity<String> deleteProduto(@PathVariable Integer idProduto){
 		produtoService.deleteProduto(idProduto);
 		return new ResponseEntity<>("", HttpStatus.OK);
