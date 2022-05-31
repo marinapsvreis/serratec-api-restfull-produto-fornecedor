@@ -1,6 +1,7 @@
 package com.residencia.comercio.dtos;
 
 import java.util.Date;
+import java.util.List;
 
 public class FornecedorDTO {
 	private Integer idFornecedor;
@@ -20,7 +21,7 @@ public class FornecedorDTO {
 	private String cep;
 	private String municipio;
 	private Date dataAbertura;
-	// private List<ProdutoDTO> produtoDTOList;
+	private List<ProdutoDTO> produtoDTOList;
 
 	public Integer getIdFornecedor() {
 		return idFornecedor;
@@ -150,13 +151,12 @@ public class FornecedorDTO {
 		this.dataAbertura = dataAbertura;
 	}
 
-	@Override
-	public String toString() {
-		return "FornecedorDTO [idFornecedor=" + idFornecedor + ", cnpj=" + cnpj + ", tipo=" + tipo + ", razaoSocial="
-				+ razaoSocial + ", uf=" + uf + ", telefone=" + telefone + ", email=" + email + ", nomeFantasia="
-				+ nomeFantasia + ", statusSituacao=" + statusSituacao + ", bairro=" + bairro + ", logradouro="
-				+ logradouro + ", numero=" + numero + ", complemento=" + complemento + ", cep=" + cep + ", municipio="
-				+ municipio + ", dataAbertura=" + dataAbertura + "]";
+	public List<ProdutoDTO> getProdutoDTOList() {
+		return produtoDTOList;
 	}
+
+	public void setProdutoDTOList(List<ProdutoDTO> produtoDTOList) {
+		this.produtoDTOList = produtoDTOList;
+	}	
 
 }
