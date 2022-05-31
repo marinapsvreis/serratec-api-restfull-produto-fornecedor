@@ -1,10 +1,10 @@
 package com.residencia.comercio.services;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,13 @@ import com.residencia.comercio.repositories.CategoriaRepository;
 @Service
 public class CategoriaService {
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private Arquivo2Service arquivo2Service;
+	
+	@Autowired
+	private MailService emailService;
 	
 	@Value("${pasta.arquivos.imagem}")
     private Path path;
@@ -48,7 +54,7 @@ public class CategoriaService {
 		return categoriaRepository.save(categoria);
 	}
 	
-	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file) {
+	public Categoria saveCategoriaComFoto(String categoriaString, MultipartFile file){
 		
 		Categoria novaCategoria = new Categoria();
 		
@@ -63,17 +69,23 @@ public class CategoriaService {
 		
 		String fileName = "categoria." + categoriaSalva.getIdCategoria() + ".image.png";
 		
-		try {
-			Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+		arquivo2Service.criarArquivo(fileName, file);		
 		
 		try {
 			categoriaSalva.setNomeImagem(path.resolve(fileName).toRealPath().toString());
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
+		
+//		String corpoEmail = "Foi cadastrada uma categoria com sucesso!" + categoriaSalva.toString();
+//		emailService.enviarEmail("teste@teste.com", "Cadastro de Categoria", corpoEmail);
+		
+        try {
+            emailService.enviarEmailHTML("teste@teste.com", "Teste Email Categoria com HTML!!!", "<h1>Olá mundo!</h1><br><p>Muito <b>fácil!</b></p>");
+        } catch (MessagingException e) {
+            System.out.println("Erro ao enviar e-mail HTML.");
+            e.printStackTrace();
+        }
 
 		return categoriaRepository.save(categoriaSalva);
 	}

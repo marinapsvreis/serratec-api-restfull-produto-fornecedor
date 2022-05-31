@@ -3,11 +3,14 @@ package com.residencia.comercio.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -62,4 +65,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       ErrorResponse error = new ErrorResponse(httpStatus.value(), "CNPJ no formato errado", details);
       return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+    
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+//    	List<String> details = new ArrayList<>();
+//        details.add(ex.getLocalizedMessage());
+//        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Falha na Validação dos Dados da Requisição", details);
+//    	return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+//    } 
+    
+    @Override
+	protected ResponseEntity<Object> handleMissingServletRequestParameter(
+	  MissingServletRequestParameterException ex, HttpHeaders headers, 
+	  HttpStatus status, WebRequest request) {
+	    List<String> details = new ArrayList<>();
+	    details.add(ex.getLocalizedMessage());
+        details.add("Parâmetro não processado: " + ex.getParameterName());
+    	ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), 
+    			"Falha na Validação dos Dados da Requisição", details);
+    	return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
 }

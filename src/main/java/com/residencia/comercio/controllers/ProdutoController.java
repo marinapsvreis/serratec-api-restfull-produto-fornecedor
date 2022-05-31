@@ -3,10 +3,12 @@ package com.residencia.comercio.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/produto")
+@Validated
 @Tag(name = "Produto", description = "endpoints")
 public class ProdutoController {
 
@@ -65,6 +68,23 @@ public class ProdutoController {
 		}else {
 			return new ResponseEntity<>(produto, HttpStatus.OK);
 		}
+	}
+	
+	@GetMapping("/query")
+	public ResponseEntity<Produto> findByIdQuery(
+			@RequestParam
+			@NotBlank(message = "O sku deve ser preenchido.")
+			String sku){
+		return new ResponseEntity<>(null, HttpStatus.CONTINUE);
+	}
+	
+		
+	@GetMapping("/request")
+	public ResponseEntity<Produto> findByIdRequest(
+			@RequestParam
+			@NotBlank(message = "O id deve ser preenchido.")
+			Integer id){
+		return new ResponseEntity<>(null, HttpStatus.CONTINUE);
 	}
 	
 	@GetMapping("/dto/{id}")
@@ -107,4 +127,5 @@ public class ProdutoController {
 		produtoService.deleteProduto(idProduto);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
+
 }
